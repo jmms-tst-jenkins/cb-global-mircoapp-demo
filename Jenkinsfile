@@ -15,12 +15,13 @@ node {
    
    // -- Descarga código desde SCM
    echo 'Descargando código de SCM'
-   sh 'rm -rf *'
-   checkout scm
+   //sh 'rm -rf *'
+   //checkout scm
    
    // -- Compilando
    echo 'Compilando aplicación'
-   sh 'mvn clean compile'
+   sh 'ls -lrt'
+   //sh 'mvn clean compile'
    
    // ------------------------------------
    // -- ETAPA: Test
@@ -28,12 +29,12 @@ node {
    stage 'Test'
    echo 'Ejecutando tests'
    try{
-      sh 'mvn verify'
-      step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
+     // sh 'mvn verify'
+     // step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
    }catch(err) {
-      step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
-      if (currentBuild.result == 'UNSTABLE')
-         currentBuild.result = 'FAILURE'
+      //step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
+      //if (currentBuild.result == 'UNSTABLE')
+      //   currentBuild.result = 'FAILURE'
       throw err
    }
    
@@ -42,12 +43,12 @@ node {
    // ------------------------------------
    stage 'Instalar'
    echo 'Instala el paquete generado en el repositorio maven'
-   sh 'mvn install -Dmaven.test.skip=true'
+   //sh 'mvn install -Dmaven.test.skip=true'
    
    // ------------------------------------
    // -- ETAPA: Archivar
    // ------------------------------------
    stage 'Archivar'
    echo 'Archiva el paquete el paquete generado en Jenkins'
-   step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar, **/target/*.war', fingerprint: true])
+   //step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar, **/target/*.war', fingerprint: true])
 }
